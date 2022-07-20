@@ -1,27 +1,17 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:kopelindo/core/utils/utils.dart';
 
-import 'pages.dart';
-
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class AddPage extends StatefulWidget {
+  const AddPage({Key? key}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<AddPage> createState() => _AddPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _AddPageState extends State<AddPage> {
   final _formKey = GlobalKey<FormState>();
-  var username;
-  var password;
-  _showMsg(msg) {
-    final snackBar = SnackBar(
-      content: Text(msg),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
+  var plafon;
+  var tenor;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('Login'),
+            const Text('Tambah Pengajuan'),
             Form(
               key: _formKey,
               child: Column(
@@ -39,13 +29,13 @@ class _LoginPageState extends State<LoginPage> {
                   TextFormField(
                     keyboardType: TextInputType.text,
                     decoration: const InputDecoration(
-                      labelText: 'Username',
+                      labelText: 'Plafon',
                     ),
-                    validator: (usernameValue) {
-                      if (usernameValue!.isEmpty) {
-                        return 'Please enter username';
+                    validator: (plafonValue) {
+                      if (plafonValue!.isEmpty) {
+                        return 'Please enter plafon';
                       }
-                      username = usernameValue;
+                      plafon = plafonValue;
                       return null;
                     },
                   ),
@@ -53,13 +43,13 @@ class _LoginPageState extends State<LoginPage> {
                   TextFormField(
                     keyboardType: TextInputType.text,
                     decoration: const InputDecoration(
-                      labelText: 'Password',
+                      labelText: 'Tenor',
                     ),
-                    validator: (passwordValue) {
-                      if (passwordValue!.isEmpty) {
-                        return 'Please enter password';
+                    validator: (tenorValue) {
+                      if (tenorValue!.isEmpty) {
+                        return 'Please enter tenor';
                       }
-                      password = passwordValue;
+                      tenor = tenorValue;
                       return null;
                     },
                   ),
@@ -67,10 +57,10 @@ class _LoginPageState extends State<LoginPage> {
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        _login();
+                        _create();
                       }
                     },
-                    child: const Text('Login'),
+                    child: const Text('Save'),
                   ),
                 ],
               ),
@@ -81,22 +71,15 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _login() async{
+  void _create() async{
     var data = {
-      'username' : username,
-      'password' : password
+      'plafon' : plafon,
+      'tenor' : tenor
     };
 
-    var res = await Network().login(data, '/login');
+    var res = await Network().create(data, '/pengajuan/create');
     if(res.statusCode == 200){
-      Navigator.pushReplacement<void, void>(
-        context,
-        MaterialPageRoute<void>(
-          builder: (BuildContext context) => const HomePage(),
-        ),
-      );
-    }else{
-      _showMsg('Login gagal');
+      Navigator.pop(context);
     }
   }
 }

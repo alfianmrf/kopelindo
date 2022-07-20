@@ -18,4 +18,27 @@ class Network{
       Uri.parse(fullUrl),
     );
   }
+
+  deleteData(apiUrl) async {
+    var fullUrl = _url + apiUrl;
+    return await http.delete(
+      Uri.parse(fullUrl),
+    );
+  }
+
+  create(data, apiUrl) async {
+    var fullUrl = _url + apiUrl;
+    return await http.post(
+      Uri.parse(fullUrl),
+      body: data,
+    );
+  }
+
+  update(data, apiUrl) async {
+    var fullUrl = _url + apiUrl;
+    return await http.post(
+      Uri.parse(fullUrl),
+      body: data,
+    );
+  }
 }

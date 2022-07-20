@@ -3,6 +3,8 @@ import 'package:kopelindo/core/utils/utils.dart';
 import 'package:kopelindo/presentation/models/models.dart';
 import 'dart:convert';
 
+import 'package:kopelindo/presentation/pages/pages.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -32,7 +34,12 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AddPage()),
+                ).then((value) => _getData());
+              },
               child: const Text('Tambah'),
             ),
             Expanded(
@@ -51,12 +58,20 @@ class _HomePageState extends State<HomePage> {
                         Row(
                           children: [
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => EditPage(id: data[index].id!, plafon: data[index].plafon!, tenor: data[index].tenor!)),
+                                ).then((value) => _getData());
+                              },
                               child: const Text('Edit'),
                             ),
-                            SizedBox(width: 10),
+                            const SizedBox(width: 10),
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                _deleteData(data[index].id);
+                                _getData();
+                              },
                               child: const Text('Hapus'),
                             ),
                           ],
@@ -73,7 +88,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _getData() async{
+  _getData() async {
+    data = [];
     setState(() {
       _isLoading = true;
     });
@@ -90,5 +106,9 @@ class _HomePageState extends State<HomePage> {
     });
 
     return data;
+  }
+
+  _deleteData(id) async {
+    await Network().deleteData('/pengajuan/delete/${id}');
   }
 }
